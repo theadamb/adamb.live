@@ -22,6 +22,21 @@ function Timer({
   const [seconds, setSeconds] = useState(0)
   const [remainingSessions, setRemainingSessions] = useState(sessionCount)
 
+  // Update document title based on timer state
+  useEffect(() => {
+    if (isRunning) {
+      const timerText = `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+      document.title = `${timerText} adamb.live`;
+    } else {
+      document.title = 'adamb.live';
+    }
+
+    // Cleanup - reset title when component unmounts
+    return () => {
+      document.title = 'adamb.live';
+    };
+  }, [minutes, seconds, isRunning]);
+
   // Reset on initial load
   useEffect(() => {
     setCurrentSession(1)
@@ -107,7 +122,7 @@ function Timer({
       <div className="text-white/80 text-2xl mb-1">
         {isBreak 
           ? `Break Time (Remaining: ${remainingSessions})`
-          : `Focus Session (Remaining: ${remainingSessions})`
+          : `Focus Time (Remaining: ${remainingSessions})`
         }
       </div>
       <div className="text-[10rem] leading-none font-bold text-white mb-6">
