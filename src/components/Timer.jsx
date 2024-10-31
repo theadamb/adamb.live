@@ -106,8 +106,8 @@ function Timer({
     <div className="text-center">
       <div className="text-white/80 text-2xl mb-1">
         {isBreak 
-          ? `Break Time (${remainingSessions} sessions remaining)`
-          : `Focus Session (${remainingSessions} sessions remaining)`
+          ? `Break Time (Remaining: ${remainingSessions})`
+          : `Focus Session (Remaining: ${remainingSessions})`
         }
       </div>
       <div className="text-[10rem] leading-none font-bold text-white mb-6">
