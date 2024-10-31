@@ -45,9 +45,13 @@ function App() {
   const [isBreak, setIsBreak] = useState(false)
   const [timerRunning, setTimerRunning] = useState(false)
 
-  // UI States
-  const [backgroundStyle, setBackgroundStyle] = useState('default')
-  const [backgroundType, setBackgroundType] = useState('gradient')
+  // UI States with localStorage persistence
+  const [backgroundStyle, setBackgroundStyle] = useState(() => {
+    return localStorage.getItem('backgroundStyle') || 'default'
+  })
+  const [backgroundType, setBackgroundType] = useState(() => {
+    return localStorage.getItem('backgroundType') || 'gradient'
+  })
   const [currentPreset, setCurrentPreset] = useState('light')
   const [title, setTitle] = useState('Adamb.live')
   const [showTodoModal, setShowTodoModal] = useState(false)
@@ -73,7 +77,13 @@ function App() {
     return parseInt(localStorage.getItem('completedTasks')) || 0
   })
 
-  // Local Storage Effects
+  // Save background preferences to localStorage
+  useEffect(() => {
+    localStorage.setItem('backgroundStyle', backgroundStyle)
+    localStorage.setItem('backgroundType', backgroundType)
+  }, [backgroundStyle, backgroundType])
+
+  // Other localStorage Effects
   useEffect(() => {
     const savedFocusedTask = localStorage.getItem('focusedTask')
     if (savedFocusedTask) {
