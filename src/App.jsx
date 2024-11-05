@@ -5,7 +5,8 @@ import Quote from './components/Quote'
 import TodoModal from './components/TodoModal'
 import StatsCounter from './components/StatsCounter'
 import ConfirmationModal from './components/ConfirmationModal'
-import { ListTodo } from 'lucide-react'
+import FlowModal from './components/FlowModal'
+import { ListTodo, Focus } from 'lucide-react'
 
 function EditableTitle({ title, setTitle }) {
   const [isEditing, setIsEditing] = useState(false)
@@ -44,6 +45,8 @@ function App() {
   const [currentSession, setCurrentSession] = useState(1)
   const [isBreak, setIsBreak] = useState(false)
   const [timerRunning, setTimerRunning] = useState(false)
+  const [isFlowActive, setIsFlowActive] = useState(false)
+  const [remainingSessions, setRemainingSessions] = useState(sessionCount)
 
   // UI States with localStorage persistence
   const [backgroundStyle, setBackgroundStyle] = useState(() => {
@@ -76,6 +79,11 @@ function App() {
   const [completedTasks, setCompletedTasks] = useState(() => {
     return parseInt(localStorage.getItem('completedTasks')) || 0
   })
+
+  // Update remaining sessions when sessionCount changes
+  useEffect(() => {
+    setRemainingSessions(sessionCount)
+  }, [sessionCount])
 
   // Save background preferences to localStorage
   useEffect(() => {
@@ -122,6 +130,22 @@ function App() {
     setWorkSessions(0)
     setBreakSessions(0)
     setCompletedTasks(0)
+  }
+
+  const handleFlowComplete = () => {
+    setIsFlowActive(false)
+    setIsBreak(true)
+    if (autoStartBreak) {
+      setTimerRunning(true)
+    }
+    setWorkSessions(prev => prev + 1)
+    setRemainingSessions(prev => prev - 1)
+    if (currentSession < sessionCount) {
+      setCurrentSession(prev => prev + 1)
+    } else {
+      setCurrentSession(1)
+      setRemainingSessions(sessionCount)
+    }
   }
 
   const backgrounds = {
@@ -202,6 +226,8 @@ function App() {
             isRunning={timerRunning}
             setIsRunning={setTimerRunning}
             onSessionComplete={handleSessionComplete}
+            remainingSessions={remainingSessions}
+            setRemainingSessions={setRemainingSessions}
           >
             <div className="flex justify-center space-x-4">
               <button 
@@ -220,6 +246,18 @@ function App() {
             </div>
           </Timer>
           <Quote />
+          {!isBreak && (
+            <button
+              onClick={() => {
+                setIsFlowActive(true)
+                setTimerRunning(false)
+              }}
+              className="mt-6 bg-black/40 hover:bg-black/50 text-white text-xl font-bold py-4 px-8 rounded-2xl transition-all transform hover:scale-105 backdrop-blur-md shadow-lg border border-white/10 flex items-center space-x-2"
+            >
+              <Focus className="w-6 h-6" />
+              <span>Enter Flow</span>
+            </button>
+          )}
         </div>
         <Settings 
           setTimePreset={setTimePreset}
@@ -250,6 +288,7 @@ function App() {
           onTaskComplete={handleTaskComplete}
         />
       )}
+      {isFlowActive && <FlowModal onComplete={handleFlowComplete} />}
       <ConfirmationModal 
         isOpen={showResetModal}
         onClose={() => setShowResetModal(false)}

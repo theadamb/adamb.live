@@ -16,11 +16,12 @@ function Timer({
   isRunning,
   setIsRunning,
   onSessionComplete,
+  remainingSessions,
+  setRemainingSessions,
   children
 }) {
   const [minutes, setMinutes] = useState(preset)
   const [seconds, setSeconds] = useState(0)
-  const [remainingSessions, setRemainingSessions] = useState(sessionCount)
 
   // Update document title based on timer state
   useEffect(() => {
@@ -31,7 +32,6 @@ function Timer({
       document.title = 'adamb.live';
     }
 
-    // Cleanup - reset title when component unmounts
     return () => {
       document.title = 'adamb.live';
     };
@@ -96,7 +96,6 @@ function Timer({
                 setIsBreak(false)
                 setMinutes(preset)
               } else {
-                // Reset everything when all sessions are complete
                 setCurrentSession(1)
                 setIsBreak(false)
                 setMinutes(preset)
