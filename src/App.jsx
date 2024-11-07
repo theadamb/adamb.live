@@ -299,7 +299,7 @@ function App() {
         onConfirm={resetCounters}
         message="Are you sure you want to reset all counters? This action cannot be undone."
       />
-      {showKeyboard && <VirtualKeyboard />}
+      {showKeyboard && <VirtualKeyboard setShowKeyboard={setShowKeyboard} />}
     </div>
   )
 }
