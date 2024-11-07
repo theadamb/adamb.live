@@ -33,6 +33,7 @@ function Settings({
     const handleClickOutside = (event) => {
       if (showSettings && !event.target.closest('.settings-panel') && !event.target.closest('.settings-button')) {
         setShowSettings(false)
+        setCurrentView('main') // Reset to main view when closing
       }
     }
 
@@ -40,6 +41,7 @@ function Settings({
     return () => document.removeEventListener('mousedown', handleClickOutside)
   }, [showSettings])
 
+  
   const gradientBackgrounds = [
     { id: 'default', name: 'Default Purple', gradient: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)' },
     { id: 'ocean', name: 'Ocean Blue', gradient: 'linear-gradient(135deg, #2E3192 0%, #1BFFFF 100%)' },
