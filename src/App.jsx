@@ -6,6 +6,7 @@ import TodoModal from './components/TodoModal'
 import StatsCounter from './components/StatsCounter'
 import ConfirmationModal from './components/ConfirmationModal'
 import FlowModal from './components/FlowModal'
+import VirtualKeyboard from './components/VirtualKeyboard'
 import { ListTodo, Focus } from 'lucide-react'
 
 function EditableTitle({ title, setTitle }) {
@@ -47,6 +48,7 @@ function App() {
   const [timerRunning, setTimerRunning] = useState(false)
   const [isFlowActive, setIsFlowActive] = useState(false)
   const [remainingSessions, setRemainingSessions] = useState(sessionCount)
+  const [showKeyboard, setShowKeyboard] = useState(false)
 
   // UI States with localStorage persistence
   const [backgroundStyle, setBackgroundStyle] = useState(() => {
@@ -277,6 +279,8 @@ function App() {
           setSoundEnabled={setSoundEnabled}
           devMode={devMode}
           setDevMode={setDevMode}
+          showKeyboard={showKeyboard}
+          setShowKeyboard={setShowKeyboard}
           onResetCounters={() => setShowResetModal(true)}
         />
       </div>
@@ -295,6 +299,7 @@ function App() {
         onConfirm={resetCounters}
         message="Are you sure you want to reset all counters? This action cannot be undone."
       />
+      {showKeyboard && <VirtualKeyboard />}
     </div>
   )
 }

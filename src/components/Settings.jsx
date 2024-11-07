@@ -18,6 +18,8 @@ function Settings({
   setSoundEnabled,
   devMode,
   setDevMode,
+  showKeyboard,
+  setShowKeyboard,
   onResetCounters
 }) {
   const [showSettings, setShowSettings] = useState(false)
@@ -160,6 +162,20 @@ function Settings({
           >
             <div className={`w-4 h-4 rounded-full bg-white transform transition-transform duration-200 ease-in-out ml-1 ${
               devMode ? 'translate-x-6' : ''
+            }`} />
+          </button>
+        </div>
+
+        <div className="flex items-center justify-between mt-3">
+          <span className="text-sm text-white/70 drop-shadow-sm">Virtual Keyboard</span>
+          <button
+            onClick={() => setShowKeyboard(!showKeyboard)}
+            className={`w-12 h-6 rounded-full transition-colors duration-200 ease-in-out ${
+              showKeyboard ? 'bg-green-500' : 'bg-gray-400'
+            }`}
+          >
+            <div className={`w-4 h-4 rounded-full bg-white transform transition-transform duration-200 ease-in-out ml-1 ${
+              showKeyboard ? 'translate-x-6' : ''
             }`} />
           </button>
         </div>
