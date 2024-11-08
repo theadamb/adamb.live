@@ -89,7 +89,7 @@ function Timer({
                         new Notification(isBreak ? 'Break Complete!' : 'Focus Session Complete!')
                       }
                       if (autoClick) {
-                        document.getElementById('state-transition-button').click()
+                        handleFlowComplete()
                       }
 
             onSessionComplete(isBreak)
