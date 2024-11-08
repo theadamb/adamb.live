@@ -49,7 +49,7 @@ function App() {
   const [isFlowActive, setIsFlowActive] = useState(false)
   const [remainingSessions, setRemainingSessions] = useState(sessionCount)
   const [showKeyboard, setShowKeyboard] = useState(false)
-  const [autoClick, setAutoClick] = useState(false)
+  const [manualMode, setManualMode] = useState(false)
 
   // UI States with localStorage persistence
   const [backgroundStyle, setBackgroundStyle] = useState(() => {
@@ -138,7 +138,7 @@ function App() {
   const handleFlowComplete = () => {
     setIsFlowActive(false)
     setIsBreak(true)
-    if (autoStartBreak) {
+    if (autoStartBreak && !manualMode) {
       setTimerRunning(true)
     }
     setWorkSessions(prev => prev + 1)
@@ -179,10 +179,40 @@ function App() {
     } else {
       setWorkSessions(prev => prev + 1)
     }
+
+    if (!manualMode) {
+      // Automatic Mode Logic
+      if (wasBreak) {
+        setIsBreak(false)
+        if (autoStartWork) {
+          setTimerRunning(true)
+        }
+      } else {
+        setIsBreak(true)
+        if (autoStartBreak) {
+          setTimerRunning(true)
+        }
+      }
+    } else {
+      // In Manual Mode, do not automatically transition
+      setTimerRunning(false)
+    }
   }
 
   const handleTaskComplete = () => {
     setCompletedTasks(prev => prev + 1)
+  }
+
+  const handleStartBreak = () => {
+    setWorkSessions(prev => prev + 1)
+    setIsBreak(true)
+    setTimerRunning(false)
+  }
+
+  const handleFinishBreak = () => {
+    setBreakSessions(prev => prev + 1)
+    setIsBreak(false)
+    setTimerRunning(false)
   }
 
   return (
@@ -223,7 +253,9 @@ function App() {
             isBreak={isBreak}
             setIsBreak={setIsBreak}
             autoStartWork={autoStartWork}
+            setAutoStartWork={setAutoStartWork}
             autoStartBreak={autoStartBreak}
+            setAutoStartBreak={setAutoStartBreak}
             soundEnabled={soundEnabled}
             devMode={devMode}
             isRunning={timerRunning}
@@ -231,7 +263,7 @@ function App() {
             onSessionComplete={handleSessionComplete}
             remainingSessions={remainingSessions}
             setRemainingSessions={setRemainingSessions}
-            autoClick={autoClick}
+            manualMode={manualMode}
             onComplete={handleFlowComplete}
           >
             <div className="flex justify-center space-x-4">
@@ -263,6 +295,22 @@ function App() {
               <span>Enter Flow</span>
             </button>
           )}
+          {manualMode && !isBreak && (
+            <button
+              onClick={handleStartBreak}
+              className="mt-4 bg-black/40 hover:bg-black/50 text-white text-xl font-bold py-4 px-8 rounded-2xl transition-all transform hover:scale-105 backdrop-blur-md shadow-lg border border-white/10"
+            >
+              Start Break
+            </button>
+          )}
+          {manualMode && isBreak && (
+            <button
+              onClick={handleFinishBreak}
+              className="mt-4 bg-black/40 hover:bg-black/50 text-white text-xl font-bold py-4 px-8 rounded-2xl transition-all transform hover:scale-105 backdrop-blur-md shadow-lg border border-white/10"
+            >
+              Finish Break
+            </button>
+          )}
         </div>
         <Settings 
           setTimePreset={setTimePreset}
@@ -284,8 +332,8 @@ function App() {
           setDevMode={setDevMode}
           showKeyboard={showKeyboard}
           setShowKeyboard={setShowKeyboard}
-          autoClick={autoClick}
-          setAutoClick={setAutoClick}
+          manualMode={manualMode}
+          setManualMode={setManualMode}
           onResetCounters={() => setShowResetModal(true)}
         />
       </div>
@@ -305,12 +353,12 @@ function App() {
         message="Are you sure you want to reset all counters? This action cannot be undone."
       />
       {showKeyboard && <VirtualKeyboard setShowKeyboard={setShowKeyboard} />}
-      
+
       <button 
         id="state-transition-button" 
         className="opacity-0 pointer-events-none absolute"
         aria-hidden="true"
-        onClick={handleFlowComplete}  // Add this - same function Task Complete uses
+        onClick={handleFlowComplete}
       />
     </div>
   )

@@ -18,8 +18,8 @@ function Settings({
   setSoundEnabled,
   devMode,
   setDevMode,
-  autoClick,
-  setAutoClick,
+  manualMode,
+  setManualMode,
   showKeyboard,
   setShowKeyboard,
   onResetCounters
@@ -43,7 +43,7 @@ function Settings({
     return () => document.removeEventListener('mousedown', handleClickOutside)
   }, [showSettings])
 
-  
+
   const gradientBackgrounds = [
     { id: 'default', name: 'Default Purple', gradient: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)' },
     { id: 'ocean', name: 'Ocean Blue', gradient: 'linear-gradient(135deg, #2E3192 0%, #1BFFFF 100%)' },
@@ -80,6 +80,8 @@ function Settings({
       case 'sessions':
         setSessions(value)
         setSessionCount(value)
+        break
+      default:
         break
     }
     setCurrentPreset('custom')
@@ -169,21 +171,21 @@ function Settings({
             }`} />
           </button>
         </div>
-        
+
         <div className="flex items-center justify-between mt-3">
-          <span className="text-sm text-white/70 drop-shadow-sm">Auto Click Mode</span>
+          <span className="text-sm text-white/70 drop-shadow-sm">Manual Mode</span>
           <button
-            onClick={() => setAutoClick(!autoClick)}
+            onClick={() => setManualMode(!manualMode)}
             className={`w-12 h-6 rounded-full transition-colors duration-200 ease-in-out ${
-              autoClick ? 'bg-yellow-500' : 'bg-gray-400'
+              manualMode ? 'bg-yellow-500' : 'bg-gray-400'
             }`}
           >
             <div className={`w-4 h-4 rounded-full bg-white transform transition-transform duration-200 ease-in-out ml-1 ${
-              autoClick ? 'translate-x-6' : ''
+              manualMode ? 'translate-x-6' : ''
             }`} />
           </button>
         </div>
-        
+
         <div className="flex items-center justify-between mt-3">
           <span className="text-sm text-white/70 drop-shadow-sm">Virtual Keyboard</span>
           <button
