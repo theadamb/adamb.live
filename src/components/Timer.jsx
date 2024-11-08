@@ -19,7 +19,6 @@ function Timer({
   onSessionComplete,
   remainingSessions,
   setRemainingSessions,
-  setIsFlowActive,
   handleFlowComplete,
   children
 }) {
@@ -91,10 +90,7 @@ function Timer({
                           new Notification(isBreak ? 'Break Complete!' : 'Focus Session Complete!')
                         }
                         if (autoClick) {
-                          setIsFlowActive(true);
-                          setTimeout(() => {
-                            handleFlowComplete();
-                          }, 2100);  // Wait for flow animation
+                          handleFlowComplete()  // That's it. Just call this function.
                         }
 
             onSessionComplete(isBreak)
