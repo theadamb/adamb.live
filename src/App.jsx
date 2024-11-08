@@ -310,14 +310,7 @@ function App() {
         id="state-transition-button" 
         className="opacity-0 pointer-events-none absolute"
         aria-hidden="true"
-        onClick={() => {
-          if (isBreak) {
-            setCurrentSession(currentSession < sessionCount ? currentSession + 1 : 1)
-            setIsBreak(false)
-          } else {
-            setIsBreak(true)
-          }
-        }}
+        onClick={handleFlowComplete}  // Add this - same function Task Complete uses
       />
     </div>
   )
