@@ -232,7 +232,7 @@ function App() {
             remainingSessions={remainingSessions}
             setRemainingSessions={setRemainingSessions}
             autoClick={autoClick}
-            handleFlowComplete={handleFlowComplete}
+            onComplete={handleFlowComplete}
           >
             <div className="flex justify-center space-x-4">
               <button 

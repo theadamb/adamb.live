@@ -80,23 +80,18 @@ function Timer({
                     setSeconds(seconds - 1)
                   }
                   if (seconds === 0) {
-                      if (minutes === 0) {
-                        clearInterval(interval)
-                        setIsRunning(false)
-                        if (soundEnabled) {
-                          playChime()
-                        }
-                        if (Notification.permission === 'granted') {
-                          new Notification(isBreak ? 'Break Complete!' : 'Focus Session Complete!')
-                        }
-                        if (autoClick) {
-                          const event = new MouseEvent('click', {
-                            bubbles: true,
-                            cancelable: true,
-                            view: window
-                          });
-                          document.getElementById('state-transition-button').dispatchEvent(event);
-                        }
+                        if (minutes === 0) {
+                          clearInterval(interval)
+                          setIsRunning(false)
+                          if (soundEnabled) {
+                            playChime()
+                          }
+                          if (Notification.permission === 'granted') {
+                            new Notification(isBreak ? 'Break Complete!' : 'Focus Session Complete!')
+                          }
+                          if (autoClick) {
+                            onComplete()  // Just call it directly like the Task Complete button does
+                          }
 
             onSessionComplete(isBreak)
 
