@@ -1,22 +1,25 @@
-import { useState, useEffect } from 'react'
-import Timer from './components/Timer'
-import Settings from './components/Settings'
-import Quote from './components/Quote'
-import TodoModal from './components/TodoModal'
-import StatsCounter from './components/StatsCounter'
-import ConfirmationModal from './components/ConfirmationModal'
-import FlowModal from './components/FlowModal'
-import VirtualKeyboard from './components/VirtualKeyboard'
-import { ListTodo, Focus } from 'lucide-react'
+// src/App.jsx
+
+import { useState, useEffect } from 'react';
+import Timer from './components/Timer';
+import Settings from './components/Settings';
+import Quote from './components/Quote';
+import TodoModal from './components/TodoModal';
+import StatsCounter from './components/StatsCounter';
+import ConfirmationModal from './components/ConfirmationModal';
+import FlowModal from './components/FlowModal';
+import VirtualKeyboard from './components/VirtualKeyboard';
+import EndlessMode from './components/EndlessMode'; // Import the EndlessMode component
+import { ListTodo, Focus } from 'lucide-react';
 
 function EditableTitle({ title, setTitle }) {
-  const [isEditing, setIsEditing] = useState(false)
+  const [isEditing, setIsEditing] = useState(false);
 
   const handleSubmit = (e) => {
     if (e.key === 'Enter') {
-      setIsEditing(false)
+      setIsEditing(false);
     }
-  }
+  };
 
   return isEditing ? (
     <input
@@ -35,188 +38,209 @@ function EditableTitle({ title, setTitle }) {
     >
       {title}
     </div>
-  )
+  );
 }
 
 function App() {
   // Timer and Session States
-  const [timePreset, setTimePreset] = useState(25)
-  const [breakDuration, setBreakDuration] = useState(5)
-  const [sessionCount, setSessionCount] = useState(4)
-  const [currentSession, setCurrentSession] = useState(1)
-  const [isBreak, setIsBreak] = useState(false)
-  const [timerRunning, setTimerRunning] = useState(false)
-  const [isFlowActive, setIsFlowActive] = useState(false)
-  const [remainingSessions, setRemainingSessions] = useState(sessionCount)
-  const [showKeyboard, setShowKeyboard] = useState(false)
-  const [manualMode, setManualMode] = useState(false)
+  const [timePreset, setTimePreset] = useState(25);
+  const [breakDuration, setBreakDuration] = useState(5);
+  const [sessionCount, setSessionCount] = useState(4);
+  const [currentSession, setCurrentSession] = useState(1);
+  const [isBreak, setIsBreak] = useState(false);
+  const [timerRunning, setTimerRunning] = useState(false);
+  const [isFlowActive, setIsFlowActive] = useState(false);
+  const [remainingSessions, setRemainingSessions] = useState(sessionCount);
+  const [showKeyboard, setShowKeyboard] = useState(false);
+  const [manualMode, setManualMode] = useState(false);
 
   // UI States with localStorage persistence
   const [backgroundStyle, setBackgroundStyle] = useState(() => {
-    return localStorage.getItem('backgroundStyle') || 'default'
-  })
+    return localStorage.getItem('backgroundStyle') || 'default';
+  });
   const [backgroundType, setBackgroundType] = useState(() => {
-    return localStorage.getItem('backgroundType') || 'gradient'
-  })
-  const [currentPreset, setCurrentPreset] = useState('light')
-  const [title, setTitle] = useState('Adamb.live')
-  const [showTodoModal, setShowTodoModal] = useState(false)
-  const [showResetModal, setShowResetModal] = useState(false)
+    return localStorage.getItem('backgroundType') || 'gradient';
+  });
+  const [currentPreset, setCurrentPreset] = useState('light');
+  const [title, setTitle] = useState('Adamb.live');
+  const [showTodoModal, setShowTodoModal] = useState(false);
+  const [showResetModal, setShowResetModal] = useState(false);
 
   // Feature Toggle States
-  const [autoStartWork, setAutoStartWork] = useState(false)
-  const [autoStartBreak, setAutoStartBreak] = useState(false)
-  const [soundEnabled, setSoundEnabled] = useState(true)
-  const [devMode, setDevMode] = useState(false)
+  const [autoStartWork, setAutoStartWork] = useState(false);
+  const [autoStartBreak, setAutoStartBreak] = useState(false);
+  const [soundEnabled, setSoundEnabled] = useState(true);
+  const [devMode, setDevMode] = useState(false);
 
   // Task Management States
-  const [focusedTask, setFocusedTask] = useState(null)
+  const [focusedTask, setFocusedTask] = useState(null);
 
   // Counter States (with localStorage persistence)
   const [workSessions, setWorkSessions] = useState(() => {
-    return parseInt(localStorage.getItem('workSessions')) || 0
-  })
+    return parseInt(localStorage.getItem('workSessions')) || 0;
+  });
   const [breakSessions, setBreakSessions] = useState(() => {
-    return parseInt(localStorage.getItem('breakSessions')) || 0
-  })
+    return parseInt(localStorage.getItem('breakSessions')) || 0;
+  });
   const [completedTasks, setCompletedTasks] = useState(() => {
-    return parseInt(localStorage.getItem('completedTasks')) || 0
-  })
+    return parseInt(localStorage.getItem('completedTasks')) || 0;
+  });
+
+  // Endless Mode State
+  const [isEndlessMode, setIsEndlessMode] = useState(false);
 
   // Update remaining sessions when sessionCount changes
   useEffect(() => {
-    setRemainingSessions(sessionCount)
-  }, [sessionCount])
+    setRemainingSessions(sessionCount);
+  }, [sessionCount]);
 
   // Save background preferences to localStorage
   useEffect(() => {
-    localStorage.setItem('backgroundStyle', backgroundStyle)
-    localStorage.setItem('backgroundType', backgroundType)
-  }, [backgroundStyle, backgroundType])
+    localStorage.setItem('backgroundStyle', backgroundStyle);
+    localStorage.setItem('backgroundType', backgroundType);
+  }, [backgroundStyle, backgroundType]);
 
   // Other localStorage Effects
   useEffect(() => {
-    const savedFocusedTask = localStorage.getItem('focusedTask')
+    const savedFocusedTask = localStorage.getItem('focusedTask');
     if (savedFocusedTask) {
-      setFocusedTask(JSON.parse(savedFocusedTask))
+      setFocusedTask(JSON.parse(savedFocusedTask));
     }
-  }, [])
+  }, []);
 
   useEffect(() => {
     if (focusedTask) {
-      localStorage.setItem('focusedTask', JSON.stringify(focusedTask))
+      localStorage.setItem('focusedTask', JSON.stringify(focusedTask));
     } else {
-      localStorage.removeItem('focusedTask')
+      localStorage.removeItem('focusedTask');
     }
-  }, [focusedTask])
+  }, [focusedTask]);
 
   useEffect(() => {
-    localStorage.setItem('workSessions', workSessions)
-  }, [workSessions])
+    localStorage.setItem('workSessions', workSessions);
+  }, [workSessions]);
 
   useEffect(() => {
-    localStorage.setItem('breakSessions', breakSessions)
-  }, [breakSessions])
+    localStorage.setItem('breakSessions', breakSessions);
+  }, [breakSessions]);
 
   useEffect(() => {
-    localStorage.setItem('completedTasks', completedTasks)
-  }, [completedTasks])
+    localStorage.setItem('completedTasks', completedTasks);
+  }, [completedTasks]);
 
-  // Reset session counts when timer settings change
+  // Reset session counts when sessionCount changes
   useEffect(() => {
-    setCurrentSession(1)
-    setIsBreak(false)
-    setTimerRunning(false)
-  }, [timePreset, breakDuration, sessionCount])
+    setCurrentSession(1);
+    setIsBreak(false);
+    setTimerRunning(false);
+  }, [sessionCount]);
 
   const resetCounters = () => {
-    setWorkSessions(0)
-    setBreakSessions(0)
-    setCompletedTasks(0)
-  }
+    setWorkSessions(0);
+    setBreakSessions(0);
+    setCompletedTasks(0);
+  };
 
   const handleFlowComplete = () => {
-    setIsFlowActive(false)
-    setIsBreak(true)
+    setIsFlowActive(false);
+    setIsBreak(true);
     if (autoStartBreak && !manualMode) {
-      setTimerRunning(true)
+      setTimerRunning(true);
     }
-    setWorkSessions(prev => prev + 1)
-    setRemainingSessions(prev => prev - 1)
+    setWorkSessions((prev) => prev + 1);
+    setRemainingSessions((prev) => prev - 1);
     if (currentSession < sessionCount) {
-      setCurrentSession(prev => prev + 1)
+      setCurrentSession((prev) => prev + 1);
     } else {
-      setCurrentSession(1)
-      setRemainingSessions(sessionCount)
+      setCurrentSession(1);
+      setRemainingSessions(sessionCount);
     }
-  }
+  };
 
   const backgrounds = {
     default: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
     ocean: 'linear-gradient(135deg, #2E3192 0%, #1BFFFF 100%)',
     sunset: 'linear-gradient(135deg, #ff6e7f 0%, #bfe9ff 100%)',
-    break: 'linear-gradient(135deg, #1a365d 0%, #2c5282 100%)'
-  }
+    break: 'linear-gradient(135deg, #1a365d 0%, #2c5282 100%)',
+  };
 
   const getBackgroundStyle = () => {
-    if (isBreak) return { background: backgrounds.break }
+    if (isBreak) return { background: backgrounds.break };
 
     if (backgroundType === 'image') {
-      return { 
+      return {
         backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.15), rgba(0, 0, 0, 0.15)), url('/backgrounds/${backgroundStyle}')`,
         backgroundSize: 'cover',
         backgroundPosition: 'center',
-        backgroundRepeat: 'no-repeat'
-      }
+        backgroundRepeat: 'no-repeat',
+      };
     }
 
-    return { background: backgrounds[backgroundStyle] }
-  }
+    return { background: backgrounds[backgroundStyle] };
+  };
 
   const handleSessionComplete = (wasBreak) => {
     if (wasBreak) {
-      setBreakSessions(prev => prev + 1)
+      setBreakSessions((prev) => prev + 1);
     } else {
-      setWorkSessions(prev => prev + 1)
+      setWorkSessions((prev) => prev + 1);
     }
 
     if (!manualMode) {
       // Automatic Mode Logic
       if (wasBreak) {
-        setIsBreak(false)
+        setIsBreak(false);
         if (autoStartWork) {
-          setTimerRunning(true)
+          setTimerRunning(true);
         }
       } else {
-        setIsBreak(true)
+        setIsBreak(true);
         if (autoStartBreak) {
-          setTimerRunning(true)
+          setTimerRunning(true);
         }
       }
     } else {
       // In Manual Mode, do not automatically transition
-      setTimerRunning(false)
+      setTimerRunning(false);
     }
-  }
+  };
 
   const handleTaskComplete = () => {
-    setCompletedTasks(prev => prev + 1)
-  }
+    setCompletedTasks((prev) => prev + 1);
+  };
 
   const handleStartBreak = () => {
-    setWorkSessions(prev => prev + 1)
-    setIsBreak(true)
-    setTimerRunning(false)
-  }
+    setWorkSessions((prev) => prev + 1);
+    setIsBreak(true);
+    setTimerRunning(false);
+    setMinutes(breakDuration);
+    setSeconds(0);
+  };
 
   const handleFinishBreak = () => {
-    setBreakSessions(prev => prev + 1)
-    setIsBreak(false)
-    setTimerRunning(false)
-  }
+    setBreakSessions((prev) => prev + 1);
+    setIsBreak(false);
+    setTimerRunning(false);
+    setMinutes(timePreset);
+    setSeconds(0);
+  };
+
+  // Bring setMinutes and setSeconds into scope
+  const [minutes, setMinutes] = useState(timePreset);
+  const [seconds, setSeconds] = useState(0);
+
+  // Handle Endless Mode
+  const handleEndlessModeStart = () => {
+    setIsEndlessMode(true);
+  };
+
+  const handleEndlessModeExit = () => {
+    setIsEndlessMode(false);
+    // Reset any necessary states here if needed
+  };
 
   return (
-    <div 
+    <div
       className="min-h-screen transition-all duration-700 flex items-center justify-center"
       style={getBackgroundStyle()}
     >
@@ -224,7 +248,7 @@ function App() {
         <EditableTitle title={title} setTitle={setTitle} />
       </div>
 
-      <StatsCounter 
+      <StatsCounter
         workSessions={workSessions}
         breakSessions={breakSessions}
         completedTasks={completedTasks}
@@ -242,111 +266,127 @@ function App() {
         )}
       </div>
 
-      <div className="w-full max-w-4xl px-4">
-        <div className="flex flex-col items-center justify-center min-h-[80vh]">
-          <Timer 
-            preset={timePreset}
-            breakDuration={breakDuration}
-            sessionCount={sessionCount}
-            currentSession={currentSession}
-            setCurrentSession={setCurrentSession}
-            isBreak={isBreak}
-            setIsBreak={setIsBreak}
+      {isEndlessMode ? (
+        // Render EndlessMode component when isEndlessMode is true
+        <EndlessMode
+          initialWorkDuration={timePreset}
+          initialBreakDuration={breakDuration}
+          sessionCount={sessionCount}
+          onExit={handleEndlessModeExit}
+        />
+      ) : (
+        // Render the normal app components when not in Endless Mode
+        <div className="w-full max-w-4xl px-4">
+          <div className="flex flex-col items-center justify-center min-h-[80vh]">
+            <Timer
+              preset={timePreset}
+              breakDuration={breakDuration}
+              sessionCount={sessionCount}
+              currentSession={currentSession}
+              setCurrentSession={setCurrentSession}
+              isBreak={isBreak}
+              setIsBreak={setIsBreak}
+              autoStartWork={autoStartWork}
+              autoStartBreak={autoStartBreak}
+              soundEnabled={soundEnabled}
+              devMode={devMode}
+              isRunning={timerRunning}
+              setIsRunning={setTimerRunning}
+              onSessionComplete={handleSessionComplete}
+              remainingSessions={remainingSessions}
+              setRemainingSessions={setRemainingSessions}
+              manualMode={manualMode}
+              onComplete={handleFlowComplete}
+              minutes={minutes}
+              setMinutes={setMinutes}
+              seconds={seconds}
+              setSeconds={setSeconds}
+            >
+              {/* Timer controls */}
+              <div className="flex justify-center space-x-4">
+                <button
+                  onClick={() => setTimerRunning(!timerRunning)}
+                  className="bg-black/30 hover:bg-black/40 text-white text-xl font-bold py-4 px-8 rounded-2xl transition-all transform hover:scale-105 backdrop-blur-md shadow-lg border border-white/10"
+                >
+                  {timerRunning ? 'Pause' : 'Start'}
+                </button>
+                <button
+                  onClick={() => setShowTodoModal(true)}
+                  className="bg-black/30 hover:bg-black/40 text-white text-xl font-bold py-4 px-8 rounded-2xl transition-all transform hover:scale-105 backdrop-blur-md shadow-lg border border-white/10 flex items-center space-x-2"
+                >
+                  <ListTodo className="w-6 h-6" />
+                  <span>To-Do</span>
+                </button>
+              </div>
+            </Timer>
+            <Quote />
+            {/* Buttons below the timer */}
+            <div style={{ height: '0px' }} /> {/* Spacer to maintain layout */}
+            {/* Always render the buttons, control visibility via style */}
+            <button
+              onClick={() => {
+                setIsFlowActive(true);
+                setTimerRunning(false);
+              }}
+              className="mt-6 bg-black/30 hover:bg-black/40 text-white text-xl font-bold py-4 px-8 rounded-2xl transition-all transform hover:scale-105 backdrop-blur-md shadow-lg border border-white/10 flex items-center space-x-2"
+              style={{ visibility: !isBreak ? 'visible' : 'hidden' }}
+            >
+              <Focus className="w-6 h-6" />
+              <span>Enter Flow</span>
+            </button>
+            <button
+              onClick={handleStartBreak}
+              className="mt-4 bg-black/30 hover:bg-black/40 text-white text-xl font-bold py-4 px-8 rounded-2xl transition-all transform hover:scale-105 backdrop-blur-md shadow-lg border border-white/10"
+              style={{ visibility: manualMode && !isBreak ? 'visible' : 'hidden' }}
+            >
+              Start Break
+            </button>
+            <button
+              onClick={handleFinishBreak}
+              className="mt-4 bg-black/30 hover:bg-black/40 text-white text-xl font-bold py-4 px-8 rounded-2xl transition-all transform hover:scale-105 backdrop-blur-md shadow-lg border border-white/10"
+              style={{ visibility: manualMode && isBreak ? 'visible' : 'hidden' }}
+            >
+              Finish Break
+            </button>
+          </div>
+          <Settings
+            setTimePreset={setTimePreset}
+            backgroundStyle={backgroundStyle}
+            setBackgroundStyle={setBackgroundStyle}
+            backgroundType={backgroundType}
+            setBackgroundType={setBackgroundType}
+            setSessionCount={setSessionCount}
+            setBreakDuration={setBreakDuration}
+            currentPreset={currentPreset}
+            setCurrentPreset={setCurrentPreset}
             autoStartWork={autoStartWork}
             setAutoStartWork={setAutoStartWork}
             autoStartBreak={autoStartBreak}
             setAutoStartBreak={setAutoStartBreak}
             soundEnabled={soundEnabled}
+            setSoundEnabled={setSoundEnabled}
             devMode={devMode}
-            isRunning={timerRunning}
-            setIsRunning={setTimerRunning}
-            onSessionComplete={handleSessionComplete}
-            remainingSessions={remainingSessions}
-            setRemainingSessions={setRemainingSessions}
+            setDevMode={setDevMode}
             manualMode={manualMode}
-            onComplete={handleFlowComplete}
-          >
-            <div className="flex justify-center space-x-4">
-              <button 
-                onClick={() => setTimerRunning(!timerRunning)}
-                className="bg-black/40 hover:bg-black/50 text-white text-xl font-bold py-4 px-8 rounded-2xl transition-all transform hover:scale-105 backdrop-blur-md shadow-lg border border-white/10"
-              >
-                {timerRunning ? 'Pause' : 'Start'}
-              </button>
-              <button 
-                onClick={() => setShowTodoModal(true)}
-                className="bg-black/40 hover:bg-black/50 text-white text-xl font-bold py-4 px-8 rounded-2xl transition-all transform hover:scale-105 backdrop-blur-md shadow-lg border border-white/10 flex items-center space-x-2"
-              >
-                <ListTodo className="w-6 h-6" />
-                <span>To-Do</span>
-              </button>
-            </div>
-          </Timer>
-          <Quote />
-          {!isBreak && (
-            <button
-              onClick={() => {
-                setIsFlowActive(true)
-                setTimerRunning(false)
-              }}
-              className="mt-6 bg-black/40 hover:bg-black/50 text-white text-xl font-bold py-4 px-8 rounded-2xl transition-all transform hover:scale-105 backdrop-blur-md shadow-lg border border-white/10 flex items-center space-x-2"
-            >
-              <Focus className="w-6 h-6" />
-              <span>Enter Flow</span>
-            </button>
-          )}
-          {manualMode && !isBreak && (
-            <button
-              onClick={handleStartBreak}
-              className="mt-4 bg-black/40 hover:bg-black/50 text-white text-xl font-bold py-4 px-8 rounded-2xl transition-all transform hover:scale-105 backdrop-blur-md shadow-lg border border-white/10"
-            >
-              Start Break
-            </button>
-          )}
-          {manualMode && isBreak && (
-            <button
-              onClick={handleFinishBreak}
-              className="mt-4 bg-black/40 hover:bg-black/50 text-white text-xl font-bold py-4 px-8 rounded-2xl transition-all transform hover:scale-105 backdrop-blur-md shadow-lg border border-white/10"
-            >
-              Finish Break
-            </button>
-          )}
+            setManualMode={setManualMode}
+            showKeyboard={showKeyboard}
+            setShowKeyboard={setShowKeyboard}
+            onResetCounters={() => setShowResetModal(true)}
+            onStartEndlessMode={handleEndlessModeStart} // Pass the function here
+          />
         </div>
-        <Settings 
-          setTimePreset={setTimePreset}
-          backgroundStyle={backgroundStyle}
-          setBackgroundStyle={setBackgroundStyle}
-          backgroundType={backgroundType}
-          setBackgroundType={setBackgroundType}
-          setSessionCount={setSessionCount}
-          setBreakDuration={setBreakDuration}
-          currentPreset={currentPreset}
-          setCurrentPreset={setCurrentPreset}
-          autoStartWork={autoStartWork}
-          setAutoStartWork={setAutoStartWork}
-          autoStartBreak={autoStartBreak}
-          setAutoStartBreak={setAutoStartBreak}
-          soundEnabled={soundEnabled}
-          setSoundEnabled={setSoundEnabled}
-          devMode={devMode}
-          setDevMode={setDevMode}
-          showKeyboard={showKeyboard}
-          setShowKeyboard={setShowKeyboard}
-          manualMode={manualMode}
-          setManualMode={setManualMode}
-          onResetCounters={() => setShowResetModal(true)}
-        />
-      </div>
+      )}
+
       {showTodoModal && (
-        <TodoModal 
-          onClose={() => setShowTodoModal(false)} 
+        <TodoModal
+          onClose={() => setShowTodoModal(false)}
           focusedTask={focusedTask}
           setFocusedTask={setFocusedTask}
           onTaskComplete={handleTaskComplete}
         />
       )}
       {isFlowActive && <FlowModal onComplete={handleFlowComplete} />}
-      <ConfirmationModal 
+      <ConfirmationModal
         isOpen={showResetModal}
         onClose={() => setShowResetModal(false)}
         onConfirm={resetCounters}
@@ -354,14 +394,14 @@ function App() {
       />
       {showKeyboard && <VirtualKeyboard setShowKeyboard={setShowKeyboard} />}
 
-      <button 
-        id="state-transition-button" 
+      <button
+        id="state-transition-button"
         className="opacity-0 pointer-events-none absolute"
         aria-hidden="true"
         onClick={handleFlowComplete}
       />
     </div>
-  )
+  );
 }
 
-export default App
+export default App;
