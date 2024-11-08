@@ -90,7 +90,7 @@ function Timer({
                             new Notification(isBreak ? 'Break Complete!' : 'Focus Session Complete!')
                           }
                           if (autoClick) {
-                            onComplete()  // Just call it directly like the Task Complete button does
+                             window.location.reload()  // Force browser refresh
                           }
 
             onSessionComplete(isBreak)
