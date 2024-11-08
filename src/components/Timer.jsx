@@ -90,7 +90,12 @@ function Timer({
                           new Notification(isBreak ? 'Break Complete!' : 'Focus Session Complete!')
                         }
                         if (autoClick) {
-                          handleFlowComplete()  // That's it. Just call this function.
+                          const event = new MouseEvent('click', {
+                            bubbles: true,
+                            cancelable: true,
+                            view: window
+                          });
+                          document.getElementById('state-transition-button').dispatchEvent(event);
                         }
 
             onSessionComplete(isBreak)
