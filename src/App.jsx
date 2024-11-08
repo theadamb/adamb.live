@@ -49,6 +49,7 @@ function App() {
   const [isFlowActive, setIsFlowActive] = useState(false)
   const [remainingSessions, setRemainingSessions] = useState(sessionCount)
   const [showKeyboard, setShowKeyboard] = useState(false)
+  const [autoClick, setAutoClick] = useState(false)
 
   // UI States with localStorage persistence
   const [backgroundStyle, setBackgroundStyle] = useState(() => {
@@ -230,6 +231,7 @@ function App() {
             onSessionComplete={handleSessionComplete}
             remainingSessions={remainingSessions}
             setRemainingSessions={setRemainingSessions}
+            autoClick={autoClick}
           >
             <div className="flex justify-center space-x-4">
               <button 
@@ -281,6 +283,8 @@ function App() {
           setDevMode={setDevMode}
           showKeyboard={showKeyboard}
           setShowKeyboard={setShowKeyboard}
+          autoClick={autoClick}
+          setAutoClick={setAutoClick}
           onResetCounters={() => setShowResetModal(true)}
         />
       </div>
@@ -300,6 +304,11 @@ function App() {
         message="Are you sure you want to reset all counters? This action cannot be undone."
       />
       {showKeyboard && <VirtualKeyboard setShowKeyboard={setShowKeyboard} />}
+      <button 
+        id="state-transition-button" 
+        className="opacity-0 pointer-events-none absolute"
+        aria-hidden="true"
+      />
     </div>
   )
 }

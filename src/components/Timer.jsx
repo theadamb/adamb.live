@@ -13,6 +13,7 @@ function Timer({
   autoStartBreak,
   soundEnabled,
   devMode,
+  autoClick,
   isRunning,
   setIsRunning,
   onSessionComplete,
@@ -70,23 +71,26 @@ function Timer({
     }
   }, [preset, breakDuration, isBreak])
 
-  useEffect(() => {
-    let interval = null
-    if (isRunning) {
-      interval = setInterval(() => {
-        if (seconds > 0) {
-          setSeconds(seconds - 1)
-        }
-        if (seconds === 0) {
-          if (minutes === 0) {
-            clearInterval(interval)
-            setIsRunning(false)
-            if (soundEnabled) {
-              playChime()
-            }
-            if (Notification.permission === 'granted') {
-              new Notification(isBreak ? 'Break Complete!' : 'Focus Session Complete!')
-            }
+            useEffect(() => {
+              let interval = null
+              if (isRunning) {
+                interval = setInterval(() => {
+                  if (seconds > 0) {
+                    setSeconds(seconds - 1)
+                  }
+                  if (seconds === 0) {
+                    if (minutes === 0) {
+                      clearInterval(interval)
+                      setIsRunning(false)
+                      if (soundEnabled) {
+                        playChime()
+                      }
+                      if (Notification.permission === 'granted') {
+                        new Notification(isBreak ? 'Break Complete!' : 'Focus Session Complete!')
+                      }
+                      if (autoClick) {
+                        document.getElementById('state-transition-button').click()
+                      }
 
             onSessionComplete(isBreak)
 
