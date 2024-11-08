@@ -304,10 +304,19 @@ function App() {
         message="Are you sure you want to reset all counters? This action cannot be undone."
       />
       {showKeyboard && <VirtualKeyboard setShowKeyboard={setShowKeyboard} />}
+      
       <button 
         id="state-transition-button" 
         className="opacity-0 pointer-events-none absolute"
         aria-hidden="true"
+        onClick={() => {
+          if (isBreak) {
+            setCurrentSession(currentSession < sessionCount ? currentSession + 1 : 1)
+            setIsBreak(false)
+          } else {
+            setIsBreak(true)
+          }
+        }}
       />
     </div>
   )
