@@ -19,6 +19,8 @@ function Timer({
   onSessionComplete,
   remainingSessions,
   setRemainingSessions,
+  setIsFlowActive,
+  handleFlowComplete,
   children
 }) {
   const [minutes, setMinutes] = useState(preset)
@@ -79,18 +81,21 @@ function Timer({
                     setSeconds(seconds - 1)
                   }
                   if (seconds === 0) {
-                    if (minutes === 0) {
-                      clearInterval(interval)
-                      setIsRunning(false)
-                      if (soundEnabled) {
-                        playChime()
-                      }
-                      if (Notification.permission === 'granted') {
-                        new Notification(isBreak ? 'Break Complete!' : 'Focus Session Complete!')
-                      }
-                      if (autoClick) {
-                        handleFlowComplete()
-                      }
+                      if (minutes === 0) {
+                        clearInterval(interval)
+                        setIsRunning(false)
+                        if (soundEnabled) {
+                          playChime()
+                        }
+                        if (Notification.permission === 'granted') {
+                          new Notification(isBreak ? 'Break Complete!' : 'Focus Session Complete!')
+                        }
+                        if (autoClick) {
+                          setIsFlowActive(true);
+                          setTimeout(() => {
+                            handleFlowComplete();
+                          }, 2100);  // Wait for flow animation
+                        }
 
             onSessionComplete(isBreak)
 
